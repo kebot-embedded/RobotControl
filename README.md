@@ -48,6 +48,7 @@ Supported commands:
 * colorLeftEar(int red, int green, int blue)
 * colorRightEar(int red, int green, int blue)
 * colorAll(int redFront, int greenFront, int blueFront, int redLeft, int greenLeft, int blueLeft, int redRight, int greenRight, int blueRight)
+* topLight(bool on)
 * tailLight(bool on)
 * eyeLights(int intensity, 12bit integer)
   Each bit represents a led, bit0 is top led, bit1 is led right from top led (when facing the robot)

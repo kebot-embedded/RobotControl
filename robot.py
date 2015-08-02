@@ -193,6 +193,10 @@ class robot:
                                                                   "%0.2X"%redLeft, "%0.2X"%greenLeft, "%0.2X"%blueLeft,\
                                                                   "%0.2X"%redRight, "%0.2X"%greenRight, "%0.2X"%blueRight))
 
+  def topLight(self, on = True):
+    val = 0xFF if on else 0x00
+    self.gatt.sendline('char-write-cmd 0x0013 0D{0}'.format("%0.2X"%val))
+
   def tailLight(self, on = True):
     val = 0xFF if on else 0x00
     self.gatt.sendline('char-write-cmd 0x0013 04{0}'.format("%0.2X"%val))
