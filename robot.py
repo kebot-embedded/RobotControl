@@ -104,7 +104,7 @@ class robot:
     self.__init__(self.btdev)
 
   def reset(self):
-    self.gatt.sendline('char-write-cmd 0x0013 C803') #reset robot
+    self.gatt.sendline('char-write-cmd 0x0013 C804') #reset robot
 
   def playSound(self, sound):
     self.gatt.sendline('char-write-cmd 0x0013 {0}'.format(sound))
