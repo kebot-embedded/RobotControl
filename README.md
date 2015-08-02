@@ -30,6 +30,10 @@ Supported commands:
 * connect()
 * disconnect()
 * reset()
+* playSound(const sound)
+  sound is a sound from the list below
+* playBeep(int tone, int time in ms)
+  can also be used without the tone and time
 * drive(int distance in mm, int time in ms)
 * setWheelSpeed(int speed, int turnspeed)
   speed is between -400 and 400
@@ -75,4 +79,73 @@ Available sensordata:
 * rightSensorSeesDot (bool)
 * unknown1 (int)
 
-
+Sounds:
+HI
+HUH
+UHOH
+OKAY
+SIGH
+TADA
+WEE
+BYE
+HORSE
+CAT
+DOG
+DINOSAUR
+LION
+GOAT
+CROCODILE
+ELEPHANT
+FIRESIREN
+TRUCKHORN
+CARENGINE
+CARTIRESQUEEL
+HELICOPTER
+JETPLANE
+BOAT
+TRAIN
+BEEPS
+LASERS
+GOBBLE
+BUZZ
+AYYAIYAI
+SQUEEK
+MYSOUND1
+MYSOUND2
+MYSOUND3
+MYSOUND4
+MYSOUND5HI
+HUH
+UHOH
+OKAY
+SIGH
+TADA
+WEE
+BYE
+HORSE
+CAT
+DOG
+DINOSAUR
+LION
+GOAT
+CROCODILE
+ELEPHANT
+FIRESIREN
+TRUCKHORN
+CARENGINE
+CARTIRESQUEEL
+HELICOPTER
+JETPLANE
+BOAT
+TRAIN
+BEEPS
+LASERS
+GOBBLE
+BUZZ
+AYYAIYAI
+SQUEEK
+MYSOUND1
+MYSOUND2
+MYSOUND3
+MYSOUND4
+MYSOUND5
