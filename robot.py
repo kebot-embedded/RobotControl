@@ -17,7 +17,6 @@ import os
 import select
 
 class robot:
-  isDash = False
   data15 = ''
   data18 = ''
   gatt = 1
@@ -52,8 +51,7 @@ class robot:
   unknown1 = 0
   WheelDistance = 0
 
-  def __init__(self, btdev, isDash=False):
-    self.isDash = isDash
+  def __init__(self, btdev):
     self.gatt = pexpect.spawn('gatttool -I -t random -b {0}'.format(btdev))
     time.sleep(1)
     self.gatt.sendline('connect')

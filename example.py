@@ -6,7 +6,7 @@ from robot import *
 btDash = "d4:75:30:ab:02:56"
 btDot = "D0:C5:55:9F:C5:C4"
 
-dash = robot(btDash, True)
+dash = robot(btDash)
 dash.reset()
 
 #Show sensor data
