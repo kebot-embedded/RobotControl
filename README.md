@@ -71,10 +71,10 @@ Available sensordata:
 * rightWheel (int)
 * zRotationAcceleration (int)
 * deltaZRotationAcceleration (int)
-* zAcceleration = 0 (int)
-  between -2040 and +2040
 * deltaXRotationAcceleration (int)
 * deltaYRotationAcceleration (int)
+* zAcceleration (int)
+  between -2040 and +2040
 * soundDirection (int)
 * leftSensorSeesDot (bool)
 * rightSensorSeesDot (bool)
