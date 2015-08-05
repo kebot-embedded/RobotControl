@@ -12,7 +12,6 @@ dot = robot(btDot)
 dot.reset()
 
 running = False
-wait = False
 
 def example():  
   global running
@@ -49,7 +48,6 @@ def example():
 
 def Disco():
     global running
-    global wait
     red = 16
     green = 71
     blue = 21
@@ -64,8 +62,7 @@ def Disco():
         red += redStep
         green += greenStep
         blue += blueStep
-        if not wait:
-            dot.colorAll(red, green, blue, red, green, blue, red, green, blue)    
+        dot.colorAll(red, green, blue, red, green, blue, red, green, blue)    
 
 print("Press {enter} to stop demo")
 example()
