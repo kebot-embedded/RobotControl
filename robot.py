@@ -87,6 +87,8 @@ class robot:
   dotWasSeen = False
   unknown1 = 0
   WheelDistance = 0
+  sendingCommand = False
+  numberCommandsSending = 0
 
   def __init__(self, btdev):
     self.gatt = pexpect.spawn('gatttool -I -t random -b {0}'.format(btdev))
@@ -96,6 +98,18 @@ class robot:
     self.btdev = btdev
     self.startReadingData()
 
+  def sendCommand(self, command, handle='0x0013'):
+    if self.numberCommandsSending > 9:
+      print('Command buffer overflowing, number of commands: {0}'.format(self.numberCommandsSending))
+    self.numberCommandsSending = self.numberCommandsSending + 1
+    while self.sendingCommand:
+      pass
+    self.sendingCommand = True
+    #print('sending command: {0} {1}'.format(handle, command)) #enable this line for debugging commands
+    self.gatt.sendline('char-write-cmd {0} {1}'.format(handle,command))
+    self.sendingCommand = False
+    self.numberCommandsSending = self.numberCommandsSending - 1
+
   def disconnect(self):
     self.stopReadingData()
     self.gatt.close()
@@ -104,13 +118,13 @@ class robot:
     self.__init__(self.btdev)
 
   def reset(self):
-    self.gatt.sendline('char-write-cmd 0x0013 C804') #reset robot
+    self.sendCommand('C804') #reset robot
 
   def playSound(self, sound):
-    self.gatt.sendline('char-write-cmd 0x0013 {0}'.format(sound))
+    self.sendCommand('{0}'.format(sound))
 
   def playBeep(self, tone=0x50, timems=0x20):	
-    self.gatt.sendline('char-write-cmd 0x0013 19{0}00{1}'.format("%0.2X"%timems, "%0.2X"%tone)) 
+    self.sendCommand('19{0}00{1}'.format("%0.2X"%timems, "%0.2X"%tone)) 
 
   def drive(self, distmm, timems=0):
     if abs(distmm) >= 0x4000:
@@ -124,7 +138,7 @@ class robot:
     byte4 = timeHex[0:2]
     byte5 = timeHex[2:4]
     byte8 = '81' if distmm < 0 else '80'
-    self.gatt.sendline('char-write-cmd 0x0013 23{0}0000{1}{2}{3}00{4}'.format(byte1, byte4, byte5, byte6, byte8))
+    sendCommand('23{0}0000{1}{2}{3}00{4}'.format(byte1, byte4, byte5, byte6, byte8))
 
   def setWheelSpeed(self, speed, turnspeed=0):
     if abs(turnspeed) > 500:
@@ -141,10 +155,10 @@ class robot:
     byte1 = speedHex[2:4]
     byte2 = turnspeedHex[2:4]
     byte3 = "%0.2X" % int(bin(int(turnspeedHex[0:2],16))[2:].zfill(3)+bin(int(speedHex[0:2],16))[2:].zfill(3),2)
-    self.gatt.sendline('char-write-cmd 0x0013 {0}{1}{2}{3}'.format(byte0, byte1, byte2, byte3))
+    self.sendCommand('{0}{1}{2}{3}'.format(byte0, byte1, byte2, byte3))
 
   def stopWheels(self):
-    self.gatt.sendline('char-write-cmd 0x0013 02000000')
+    self.sendCommand('02000000')
 
   def turn(self,degrees, timems = 0):
     if abs(degrees) > 360:
@@ -159,7 +173,7 @@ class robot:
     byte5 = timeHex[2:4]
     byte3 = rawDegreesHex[2:4]
     byte6 = "%0.2X" % int(bin(int(rawDegreesHex[0:2],16))[2:]+'000000',2)
-    self.gatt.sendline('char-write-cmd 0x0013 230000{0}{1}{2}{3}{4}80'.format(byte3, byte4, byte5, byte6, byte7))
+    self.sendCommand('230000{0}{1}{2}{3}{4}80'.format(byte3, byte4, byte5, byte6, byte7))
 
   def moveHeadY(self, degrees):
     if (degrees < -7) | (degrees > 22):
@@ -168,7 +182,7 @@ class robot:
     degrees = degrees * 100
     degrees = 0x10000 + degrees if degrees < 0 else degrees
     degreesHex = "%0.4X" % degrees
-    self.gatt.sendline('char-write-cmd 0x0013 07{0}'.format(degreesHex))
+    self.sendCommand('07{0}'.format(degreesHex))
 
   def moveHeadX(self, degrees):
     if (degrees < -135) | (degrees > 135):
@@ -177,36 +191,36 @@ class robot:
     degrees = degrees * -100
     degrees = 0x10000 + degrees if degrees < 0 else degrees
     degreesHex = "%0.4X" % degrees
-    self.gatt.sendline('char-write-cmd 0x0013 06{0}'.format(degreesHex))
+    self.sendCommand('06{0}'.format(degreesHex))
 
   def colorFront(self, red, green, blue):
-    self.gatt.sendline('char-write-cmd 0x0013 03{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
+    self.sendCommand('03{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
 
   def colorLeftEar(self, red, green, blue):
-    self.gatt.sendline('char-write-cmd 0x0013 0b{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
+    self.sendCommand('0b{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
 
   def colorRightEar(self, red, green, blue):
-    self.gatt.sendline('char-write-cmd 0x0013 0c{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
+    self.sendCommand('0c{0}{1}{2}'.format("%0.2X"%red, "%0.2X"%green, "%0.2X"%blue))
 
   def colorAll(self, redFront, greenFront, blueFront, redLeft, greenLeft, blueLeft, redRight, greenRight, blueRight):
-    self.gatt.sendline('char-write-cmd 0x0013 03{0}{1}{2}0b{3}{4}{5}0c{6}{7}{8}'.format("%0.2X"%redFront, "%0.2X"%greenFront, "%0.2X"%blueFront,\
+    self.sendCommand('03{0}{1}{2}0b{3}{4}{5}0c{6}{7}{8}'.format("%0.2X"%redFront, "%0.2X"%greenFront, "%0.2X"%blueFront,\
                                                                   "%0.2X"%redLeft, "%0.2X"%greenLeft, "%0.2X"%blueLeft,\
                                                                   "%0.2X"%redRight, "%0.2X"%greenRight, "%0.2X"%blueRight))
 
   def topLight(self, on = True):
     val = 0xFF if on else 0x00
-    self.gatt.sendline('char-write-cmd 0x0013 0D{0}'.format("%0.2X"%val))
+    self.sendCommand('0D{0}'.format("%0.2X"%val))
 
   def tailLight(self, on = True):
     val = 0xFF if on else 0x00
-    self.gatt.sendline('char-write-cmd 0x0013 04{0}'.format("%0.2X"%val))
+    self.sendCommand('04{0}'.format("%0.2X"%val))
 
   def eyeLights(self, intensity, eye): #eye is twelve with value each bit represents a led
-    self.gatt.sendline('char-write-cmd 0x0013 08{0}09{1}'.format("%0.2X"%intensity, "%0.4X"%eye))
+    self.sendCommand('08{0}09{1}'.format("%0.2X"%intensity, "%0.4X"%eye))
 
   def startReadingData(self):
-    self.gatt.sendline('char-write-cmd 0x0019 0100')
-    self.gatt.sendline('char-write-cmd 0x0016 0100')
+    self.sendCommand('0100', '0x0019')
+    self.sendCommand('0100', '0x0016')
     self.readingData = True
     thread.start_new_thread(self.updateData, ())
 
@@ -283,8 +297,8 @@ class robot:
 
   def stopReadingData(self):
     self.readingData = False
-    self.gatt.sendline('char-write-cmd 0x0019 0000')
-    self.gatt.sendline('char-write-cmd 0x0016 0000')
+    self.sendCommand('0000', '0x0019')
+    self.sendCommand('0000', '0x0016')
 
 def displaySensorData(robot):
   os.system('clear')

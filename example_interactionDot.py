@@ -45,6 +45,7 @@ def example():
         dot.playSound(JETPLANE)
         time.sleep(3)
   running = False
+  time.sleep(0.5)
 
 def Disco():
     global running
@@ -56,6 +57,7 @@ def Disco():
     greenStep = -15
     blueStep = 5
     while running:
+        time.sleep(0.01)
         redStep = -redStep if (red >= 240) | (red<=15) else redStep
         greenStep = -greenStep if (green >= 240) | (green<=15) else greenStep
         blueStep = -blueStep if (blue >= 240) | (blue<=15) else blueStep
