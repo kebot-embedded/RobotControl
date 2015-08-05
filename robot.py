@@ -138,7 +138,7 @@ class robot:
     byte4 = timeHex[0:2]
     byte5 = timeHex[2:4]
     byte8 = '81' if distmm < 0 else '80'
-    sendCommand('23{0}0000{1}{2}{3}00{4}'.format(byte1, byte4, byte5, byte6, byte8))
+    self.sendCommand('23{0}0000{1}{2}{3}00{4}'.format(byte1, byte4, byte5, byte6, byte8))
 
   def setWheelSpeed(self, speed, turnspeed=0):
     if abs(turnspeed) > 500:

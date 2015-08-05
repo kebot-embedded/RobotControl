@@ -50,20 +50,26 @@ def Disco():
     global running
     red = 16
     green = 71
-    blue = 21
+    blue = 41
     redStep = 10
-    greenStep = -15
-    blueStep = 5
+    greenStep = -20
+    blueStep = 15
     while running:
-        time.sleep(0.01)
-        redStep = -redStep if (red >= 240) | (red<=15) else redStep
-        greenStep = -greenStep if (green >= 240) | (green<=15) else greenStep
-        blueStep = -blueStep if (blue >= 240) | (blue<=15) else blueStep
+        time.sleep(0.1)
         red += redStep
+        if (red < 0) | (red > 255):
+        	red -= redStep
+        	redStep = -redStep
         green += greenStep
+        if (green < 0) | (green > 255):
+        	green -= greenStep
+        	greenStep = -greenStep
         blue += blueStep
-        dot.colorAll(red, green, blue, red, green, blue, red, green, blue)    
-
+        if (blue < 0) | (blue > 255):
+        	blue -= blueStep
+        	blueStep = -blueStep
+        dash.colorAll(red, green, blue, red, green, blue, red, green, blue)
+        
 print("Press {enter} to stop demo")
 example()
 dot.disconnect()
